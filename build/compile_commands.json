@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/george/Projects/MaiLabs/MAI_labs_CG/build",
-  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/MyVulkanApp.dir/main.cpp.o -c /home/george/Projects/MaiLabs/MAI_labs_CG/main.cpp",
-  "file": "/home/george/Projects/MaiLabs/MAI_labs_CG/main.cpp",
-  "output": "CMakeFiles/MyVulkanApp.dir/main.cpp.o"
-}
-]

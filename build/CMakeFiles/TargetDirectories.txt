@@ -1,3 +1,0 @@
-/home/george/Projects/MaiLabs/MAI_labs_CG/build/CMakeFiles/MyVulkanApp.dir
-/home/george/Projects/MaiLabs/MAI_labs_CG/build/CMakeFiles/edit_cache.dir
-/home/george/Projects/MaiLabs/MAI_labs_CG/build/CMakeFiles/rebuild_cache.dir
