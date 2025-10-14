@@ -3,7 +3,11 @@ include(FetchContent)
 
 project(veekay LANGUAGES C CXX)
 
-add_library(${PROJECT_NAME} source/veekay.cpp)
+add_library(${PROJECT_NAME} 
+    source/veekay.cpp
+    source/scene.cpp
+    source/figures/cube.cpp
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${veekay_SOURCE_DIR}/include>
