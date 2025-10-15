@@ -13,6 +13,10 @@ layout (push_constant, std430) uniform ShaderConstants {
 	vec3 color;
 };
 
+layout (location = 0) in vec3 f_color;
+layout (location = 1) in vec3 f_bc;
+
 void main() {
-	final_color = vec4(color, 1.0f);
+	vec3 col = normalize(max(f_color, vec3(0.0))) ;
+	final_color = vec4(col, 1.0f);
 }

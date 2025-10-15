@@ -12,6 +12,8 @@ typedef struct {
 
 typedef struct {
     Vector position;
+    Vector color;
+    Vector barycentric;
 } Vertex;
 
 class Figure {

@@ -43,7 +43,7 @@ VulkanBuffer index_buffer;
 
 Vector model_position = {0.0f, 0.0f, 5.0f};
 float model_rotation;
-float rotation_speed = 0.01;
+float rotation_speed = 1.0f;
 Vector model_color = {1.0f, 0.3f, 0.7f};
 bool model_spin = true;
 Scene scene;
@@ -300,15 +300,18 @@ void initialize() {
                 .format = VK_FORMAT_R32G32B32_SFLOAT,  // NOTE: 3-component vector of floats
                 .offset = offsetof(Vertex, position),  // NOTE: Offset of "position" field in a Vertex struct
             },
-        // NOTE: If you want more attributes per vertex, declare them here
-#if 0
-			{
-				.location = 1, // NOTE: Second attribute
-				.binding = 0,
-				.format = VK_FORMAT_XXX,
-				.offset = offset(Vertex, your_attribute),
-			},
-#endif
+            {
+                .location = 1,                         // NOTE: First attribute
+                .binding = 0,                          // NOTE: First vertex buffer
+                .format = VK_FORMAT_R32G32B32_SFLOAT,  // NOTE: 3-component vector of floats
+                .offset = offsetof(Vertex, color),  // NOTE: Offset of "position" field in a Vertex struct
+            },
+            {
+                .location = 2,                         // NOTE: First attribute
+                .binding = 0,                          // NOTE: First vertex buffer
+                .format = VK_FORMAT_R32G32B32_SFLOAT,  // NOTE: 3-component vector of floats
+                .offset = offsetof(Vertex, barycentric),  // NOTE: Offset of "position" field in a Vertex struct
+            },
         };
 
         // NOTE: Bring
