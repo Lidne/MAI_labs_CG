@@ -399,6 +399,33 @@ union mat4 {
         return result;
     }
 
+    static mat4 lookAt(const vec3& eye, const vec3& target, const vec3& up) {
+        vec3 forward = vec3::normalized(target - eye);
+        vec3 right = vec3::normalized(vec3::cross(up, forward));
+        vec3 camera_up = vec3::cross(forward, right);
+
+        mat4 result{};
+
+        result[0][0] = right.x;
+        result[0][1] = right.y;
+        result[0][2] = right.z;
+
+        result[1][0] = camera_up.x;
+        result[1][1] = camera_up.y;
+        result[1][2] = camera_up.z;
+
+        result[2][0] = forward.x;
+        result[2][1] = forward.y;
+        result[2][2] = forward.z;
+
+        result[3][0] = -vec3::dot(right, eye);
+        result[3][1] = -vec3::dot(camera_up, eye);
+        result[3][2] = -vec3::dot(forward, eye);
+        result[3][3] = 1.0f;
+
+        return result;
+    }
+
     static mat4 transpose(const mat4& matrix) {
         mat4 result{};
 
