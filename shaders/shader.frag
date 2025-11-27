@@ -41,7 +41,9 @@ layout (binding = 1, std140) uniform ModelUniforms {
 	vec3 albedo_color;
 };
 
-vec3 evaluateDirectionalLight(vec3 normal, vec3 view_dir) {
+layout (binding = 2) uniform sampler2D texSampler;
+
+vec3 evaluateDirectionalLight(vec3 normal, vec3 view_dir, vec3 material_color) {
 	if (scene.directional_light.enable == 0) {
 		return vec3(0.0);
 	}
@@ -53,13 +55,13 @@ vec3 evaluateDirectionalLight(vec3 normal, vec3 view_dir) {
 	const float shininess = 32.0;
 	float spec_intensity = pow(max(dot(normal, half_dir), 0.0), shininess);
 
-	vec3 diffuse = diff_intensity * scene.directional_light.color * albedo_color;
+	vec3 diffuse = diff_intensity * scene.directional_light.color * material_color;
 	vec3 specular = spec_intensity * scene.directional_light.color;
 
 	return diffuse + specular;
 }
 
-vec3 evaluatePointLight(PointLight light, vec3 normal, vec3 view_dir) {
+vec3 evaluatePointLight(PointLight light, vec3 normal, vec3 view_dir, vec3 material_color) {
 	if (light.enable == 0) {
 		return vec3(0.0);
 	}
@@ -79,7 +81,7 @@ vec3 evaluatePointLight(PointLight light, vec3 normal, vec3 view_dir) {
 	const float shininess = 32.0;
 	float spec_intensity = pow(max(dot(normal, half_dir), 0.0), shininess);
 
-	vec3 diffuse = diff_intensity * light.color * albedo_color;
+	vec3 diffuse = diff_intensity * light.color * material_color;
 	vec3 specular = spec_intensity * light.color;
 
 	return (diffuse + specular) * attenuation;
@@ -88,12 +90,13 @@ vec3 evaluatePointLight(PointLight light, vec3 normal, vec3 view_dir) {
 void main() {
 	vec3 normal = normalize(f_normal);
 	vec3 view_dir = normalize(scene.camera_position.xyz - f_position);
+	vec3 base_color = texture(texSampler, f_uv).rgb * albedo_color;
 
-	vec3 color = scene.ambient_color.rgb * albedo_color;
-	color += evaluateDirectionalLight(normal, view_dir);
+	vec3 color = scene.ambient_color.rgb * base_color;
+	color += evaluateDirectionalLight(normal, view_dir, base_color);
 
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i) {
-		color += evaluatePointLight(scene.point_lights[i], normal, view_dir);
+		color += evaluatePointLight(scene.point_lights[i], normal, view_dir, base_color);
 	}
 
 	final_color = vec4(max(color, 0.0), 1.0);

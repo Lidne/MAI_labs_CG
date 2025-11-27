@@ -401,6 +401,12 @@ void initialize(VkCommandBuffer cmd) {
                     .descriptorCount = 1,
                     .stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
                 },
+                {
+                    .binding = 2,
+                    .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                    .descriptorCount = 1,
+                    .stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+                },
             };
 
             VkDescriptorSetLayoutCreateInfo info{
@@ -507,6 +513,40 @@ void initialize(VkCommandBuffer cmd) {
     }
 
     {
+        std::vector<unsigned char> image;
+        unsigned width, height;
+        unsigned error = lodepng::decode(image, width, height, "assets/lenna.png");
+
+        if (error) {
+            std::cerr << "Failed to load texture: " << lodepng_error_text(error) << "\n";
+            texture = missing_texture;
+            texture_sampler = missing_texture_sampler;
+        } else {
+            texture = new veekay::graphics::Texture(cmd, width, height,
+                                                    VK_FORMAT_R8G8B8A8_UNORM,
+                                                    image.data());
+
+            VkSamplerCreateInfo info{
+                .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+                .magFilter = VK_FILTER_LINEAR,
+                .minFilter = VK_FILTER_LINEAR,
+                .mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR,
+                .addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+                .addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+                .addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+                .maxAnisotropy = 1.0f,
+                .maxLod = 1.0f,
+            };
+
+            if (vkCreateSampler(device, &info, nullptr, &texture_sampler) != VK_SUCCESS) {
+                std::cerr << "Failed to create Vulkan texture sampler\n";
+                veekay::app.running = false;
+                return;
+            }
+        }
+    }
+
+    {
         VkDescriptorBufferInfo buffer_infos[] = {
             {
                 .buffer = scene_uniforms_buffer->buffer,
@@ -518,6 +558,12 @@ void initialize(VkCommandBuffer cmd) {
                 .offset = 0,
                 .range = sizeof(ModelUniforms),
             },
+        };
+
+        VkDescriptorImageInfo image_info{
+            .sampler = texture_sampler,
+            .imageView = texture->view,
+            .imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
         };
 
         VkWriteDescriptorSet write_infos[] = {
@@ -538,6 +584,15 @@ void initialize(VkCommandBuffer cmd) {
                 .descriptorCount = 1,
                 .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
                 .pBufferInfo = &buffer_infos[1],
+            },
+            {
+                .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+                .dstSet = descriptor_set,
+                .dstBinding = 2,
+                .dstArrayElement = 0,
+                .descriptorCount = 1,
+                .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                .pImageInfo = &image_info,
             },
         };
 
@@ -688,6 +743,11 @@ void initialize(VkCommandBuffer cmd) {
 // NOTE: Destroy resources here, do not cause leaks in your program!
 void shutdown() {
     VkDevice& device = veekay::app.vk_device;
+
+    if (texture != missing_texture) {
+        vkDestroySampler(device, texture_sampler, nullptr);
+        delete texture;
+    }
 
     vkDestroySampler(device, missing_texture_sampler, nullptr);
     delete missing_texture;
