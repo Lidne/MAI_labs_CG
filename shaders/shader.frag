@@ -8,7 +8,6 @@ struct DirectionalLight {
 	vec3 color;
 	float _pad1;
 	int enable;
-	int _pad2[3];
 };
 
 struct PointLight {

@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include <lodepng.h>
+#include <veekay/Lights.h>
 #include <vulkan/vulkan_core.h>
 
 #include <algorithm>
@@ -12,7 +13,6 @@
 #include <iostream>
 #include <vector>
 #include <veekay/veekay.hpp>
-#include <veekay/Lights.h>
 
 namespace {
 
@@ -99,7 +99,7 @@ std::array<PointLight, max_point_lights> point_lights{{
         .constant = 1.0f,
         .linear = 0.09f,
         .quadratic = 0.032f,
-        .enable = 1},
+        .enable = 0},
     PointLight{
         .position = {1.75f, -0.25f, 0.75f},
         .color = {0.4f, 0.7f, 1.0f},
@@ -712,6 +712,69 @@ void shutdown() {
 
 void update(double time) {
     ImGui::Begin("Controls:");
+    if (ImGui::CollapsingHeader("Global Light")) {
+        ImGui::ColorEdit3("Ambient Color", &ambient_color.x);
+    }
+
+    if (ImGui::CollapsingHeader("Directional Light")) {
+        bool enable = directional_light.enable;
+        if (ImGui::Checkbox("Enable", &enable)) directional_light.enable = enable;
+
+        ImGui::ColorEdit3("Color", &directional_light.color.x);
+
+        // Direction control
+        // We treat the direction as "Direction TO Light Source"
+        static float azimuth = 0.0f;
+        static float elevation = 1.0f;  // Initial roughly Y
+
+        bool changed = false;
+        changed |= ImGui::SliderFloat("Azimuth (Rotate)", &azimuth, 0.0f, 360.0f);
+        // changed |= ImGui::SliderFloat("Elevation", &elevation, -1.0f, 1.0f); // Optional, user only asked for rotation
+
+        if (changed) {
+            float rad = toRadians(azimuth);
+            // Rotate around Y axis
+            // Preserving the original "up-ness" requires knowing what the base vector is.
+            // Let's assume we rotate a vector that points somewhat towards +Z or -Z.
+            // Let's construct a direction vector from azimuth.
+            // x = sin(azimuth), z = cos(azimuth)
+
+            // Current dir: 0, 1, -0.25.
+            // Let's allow rotating the X/Z plane components.
+            float r = std::sqrt(directional_light.dir.x * directional_light.dir.x + directional_light.dir.z * directional_light.dir.z);
+            if (r < 0.001f) r = 0.25f;  // Fallback if it was purely vertical
+
+            directional_light.dir.x = r * std::sin(rad);
+            directional_light.dir.z = r * std::cos(rad);
+
+            directional_light.dir = veekay::vec3::normalized(directional_light.dir);
+        }
+
+        ImGui::DragFloat3("Direction", &directional_light.dir.x, 0.01f, -1.0f, 1.0f);
+    }
+
+    if (ImGui::CollapsingHeader("Point/Spot Lights")) {
+        for (size_t i = 0; i < point_lights.size(); ++i) {
+            ImGui::PushID((int)i);
+            if (ImGui::TreeNode((void*)(intptr_t)i, "Light %zu", i)) {
+                PointLight& pl = point_lights[i];
+
+                bool enable = pl.enable;
+                if (ImGui::Checkbox("Enable", &enable)) pl.enable = enable;
+
+                ImGui::ColorEdit3("Color", &pl.color.x);
+                ImGui::DragFloat3("Position", &pl.position.x, 0.1f);
+
+                ImGui::Text("Attenuation:");
+                ImGui::DragFloat("Constant", &pl.constant, 0.01f, 0.0f, 10.0f);
+                ImGui::DragFloat("Linear", &pl.linear, 0.001f, 0.0f, 1.0f);
+                ImGui::DragFloat("Quadratic", &pl.quadratic, 0.0001f, 0.0f, 1.0f);
+
+                ImGui::TreePop();
+            }
+            ImGui::PopID();
+        }
+    }
     ImGui::End();
 
     if (!ImGui::IsWindowHovered()) {
