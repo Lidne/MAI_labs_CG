@@ -711,6 +711,14 @@ void shutdown() {
 }
 
 void update(double time) {
+    float t = float(time);
+    float radius = 2.0f;
+    float speed = 2.0f;
+    float center_x = -2.0f;
+    float center_z = -1.5f;
+    models[1].transform.position.x = center_x + std::sin(t * speed);
+    models[1].transform.position.z = center_z + std::sin(t * speed);
+
     ImGui::Begin("Controls:");
     if (ImGui::CollapsingHeader("Global Light")) {
         ImGui::ColorEdit3("Ambient Color", &ambient_color.x);
