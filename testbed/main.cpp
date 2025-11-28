@@ -94,12 +94,12 @@ DirectionalLight directional_light{
     .enable = 1};
 std::array<PointLight, max_point_lights> point_lights{{
     PointLight{
-        .position = {-1.5f, -0.25f, -0.5f},
+        .position = {-1.5f, -1.25f, -3.5f},
         .color = {1.0f, .0f, 0.4f},
         .constant = 1.0f,
         .linear = 0.09f,
         .quadratic = 0.032f,
-        .enable = 0},
+        .enable = 1},
     PointLight{
         .position = {1.75f, -0.25f, 0.75f},
         .color = {0.4f, 0.7f, 1.0f},
@@ -780,7 +780,7 @@ void update(double time) {
     if (!ImGui::IsWindowHovered()) {
         using namespace veekay::input;
 
-        if (mouse::isButtonDown(mouse::Button::left)) {
+        if (mouse::isButtonDown(mouse::Button::left) && !keyboard::isKeyDown(keyboard::Key::left_control)) {
             constexpr float mouse_sensitivity = 0.0025f;
             constexpr float pitch_limit = 1.55334303f;  // ~89 degrees
 
@@ -819,7 +819,7 @@ void update(double time) {
         if (keyboard::isKeyDown(keyboard::Key::q))
             camera.position += up * move_speed;
 
-        if (keyboard::isKeyDown(keyboard::Key::z))
+        if (keyboard::isKeyDown(keyboard::Key::e))
             camera.position -= up * move_speed;
     }
 
