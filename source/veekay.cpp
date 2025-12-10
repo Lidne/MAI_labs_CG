@@ -141,17 +141,24 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
 
         vkb::PhysicalDeviceSelector physical_device_selector(instance);
 
-        VkPhysicalDeviceFeatures device_features{
-            .samplerAnisotropy = true,
-        };
+		VkPhysicalDeviceFeatures device_features{
+			.samplerAnisotropy = true,
+		};
 
-        auto selector_result = physical_device_selector.set_surface(vk_surface)
-                                   .set_required_features(device_features)
-                                   .select();
-        if (!selector_result) {
-            std::cerr << selector_result.error().message() << '\n';
-            return 1;
-        }
+		VkPhysicalDeviceDynamicRenderingFeaturesKHR dyn_rendering{
+			.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR,
+			.dynamicRendering = true,
+		};
+
+		auto selector_result = physical_device_selector.set_surface(vk_surface)
+		                                               .set_required_features(device_features)
+		                                               .add_required_extension(VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME)
+		                                               .add_required_extension_features(dyn_rendering)
+		                                               .select();
+		if (!selector_result) {
+			std::cerr << selector_result.error().message() << '\n';
+			return 1;
+		}
 
         auto physical_device = selector_result.value();
 
