@@ -1,0 +1,39 @@
+\section{Метод решения}
+
+Для реализации поставленной задачи была доработана программа на языке C++ с использованием графического API Vulkan.
+
+\subsection{Загрузка изображения}
+Для загрузки изображения из файла была использована библиотека \texttt{lodepng}. Изображение загружается в массив байтов, который затем передается в конструктор класса текстуры.
+
+\begin{lstlisting}[language=C++]
+std::vector<unsigned char> image;
+unsigned width, height;
+unsigned error = lodepng::decode(image, width, height, "assets/lenna.png");
+\end{lstlisting}
+
+\subsection{Создание текстуры}
+Класс \texttt{veekay::graphics::Texture} (в файле \texttt{source/graphics.cpp}) инкапсулирует создание \texttt{VkImage}, выделение памяти и загрузку данных. Конструктор принимает указатель на пиксели и выполняет следующие действия:
+\begin{enumerate}
+    \item Создает \texttt{VkImage} с нужными параметрами (размер, формат).
+    \item Выделяет и привязывает память (\texttt{vkAllocateMemory}, \texttt{vkBindImageMemory}).
+    \item Копирует данные пикселей из временного (staging) буфера в изображение, выполняя необходимые переходы раскладки памяти (layout transitions) с помощью \texttt{vkCmdPipelineBarrier}.
+    \item Создает \texttt{VkImageView} для доступа к изображению из шейдеров.
+\end{enumerate}
+
+\subsection{Сэмплер}
+Для выборки текселей из текстуры в шейдере был создан объект сэмплера \texttt{VkSampler}. Настроен линейный фильтр (\texttt{VK\_FILTER\_LINEAR}) для минификации и магнификации, а также режим повторения текстуры (\texttt{VK\_SAMPLER\_ADDRESS\_MODE\_REPEAT}).
+
+\subsection{Дескрипторы}
+Для передачи текстуры и сэмплера в шейдер был обновлен макет дескрипторов (\texttt{VkDescriptorSetLayout}). Добавлена привязка (binding 2) типа \texttt{VK\_DESCRIPTOR\_TYPE\_COMBINED\_IMAGE\_SAMPLER}.
+Обновление дескрипторного набора (\texttt{vkUpdateDescriptorSets}) связывает созданный \texttt{VkImageView} и \texttt{VkSampler} с соответствующей привязкой.
+
+\subsection{Шейдеры}
+\textbf{Вершинный шейдер} (\texttt{shader.vert}) принимает текстурные координаты в атрибуте вершины (location 2) и передает их во фрагментный шейдер.
+
+\textbf{Фрагментный шейдер} (\texttt{shader.frag}) принимает интерполированные текстурные координаты и использует сэмплер для получения цвета пикселя:
+\begin{lstlisting}[language=C]
+layout (binding = 2) uniform sampler2D texSampler;
+// ...
+vec3 base_color = texture(texSampler, f_uv).rgb * albedo_color;
+\end{lstlisting}
+Полученный цвет текстуры затем используется в расчетах освещения.
