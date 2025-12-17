@@ -32,10 +32,26 @@ struct VulkanBuffer {
     VkDeviceMemory memory;
 };
 
-VkShaderModule vertex_shader_module;
-VkShaderModule fragment_shader_module;
-VkPipelineLayout pipeline_layout;
-VkPipeline pipeline;
+// NOTE: Scene objects
+inline namespace {
+	Camera camera{
+		.position = {0.0f, -0.5f, -3.0f}
+	};
+
+	std::vector<Model> models;
+}
+
+// NOTE: Vulkan objects
+inline namespace {
+	VkShaderModule vertex_shader_module;
+	VkShaderModule fragment_shader_module;
+
+	VkDescriptorPool descriptor_pool;
+	VkDescriptorSetLayout descriptor_set_layout;
+	VkDescriptorSet descriptor_set;
+
+	VkPipelineLayout pipeline_layout;
+	VkPipeline pipeline;
 
 // NOTE: Declare buffers and other variables here
 VulkanBuffer vertex_buffer;
