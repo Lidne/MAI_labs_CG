@@ -1,175 +1,20 @@
-\section{Описание}
-Задача сводится к подсчету количества отрезков, покрывающих координату $x$ и имеющих высоту $h > y$. Поскольку координаты $l, r$ могут быть большими (до $10^9$), но их количество ограничено $O(N)$, применяется \textbf{сжатие координат}. В массив уникальных координат добавляются только концы отрезков ($l$ и $r+1$).
+\section{Метод решения}
 
-Отрезки сортируются по убыванию высоты $h$. Мы строим персистентное дерево отрезков, обрабатывая отрезки по одному.
+Для реализации поставленной задачи была разработана программа на языке C++ с использованием графического API Vulkan.
 
-Каждая версия дерева соответствует состоянию, когда добавлены все отрезки с высотой $\ge H$. Поскольку нам нужно количество отрезков над точкой (строго $h > y$), для ответа на запрос $(x, y)$ мы выбираем версию дерева, построенную для минимальной высоты, превышающей $y$.
-
-При обработке запросов, так как они поступают в режиме \textit{online} и координаты $x$ запросов не участвуют в предварительном сжатии, для поиска соответствующего индекса в дереве используется бинарный поиск (\texttt{upper\_bound}) по массиву сжатых координат. Мы находим индекс ближайшей слева координаты из сжатого массива.
-
-\section{Корректность и оценка сложности}
-Персистентность позволяет обращаться к истории изменений, эффективно фильтруя отрезки по высоте.
-
-Сложность:
+Основные математические операции были реализованы вручную в файле \texttt{testbed/main.cpp}:
 \begin{itemize}
-    \item Сжатие координат: $O(N \log N)$.
-    \item Построение дерева: $N$ обновлений. Каждое обновление создает новую версию и добавляет $O(\log N)$ узлов. Итого $O(N \log N)$.
-    \item Обработка запросов: Для каждого запроса поиск нужной версии занимает $O(\log N)$, поиск индекса координаты — $O(\log N)$, запрос суммы в дереве — $O(\log N)$. Итого $O(M \log N)$.
+    \item Матрица проекции (\texttt{projection}) — формирует матрицу перспективной проекции на основе угла обзора (FOV), соотношения сторон и плоскостей отсечения.
+    \item Аффинные преобразования — реализованы функции создания матриц трансляции (\texttt{translation}) и вращения (\texttt{rotation}) вокруг произвольной оси.
+    \item Операции с матрицами — функция перемножения матриц (\texttt{multiply}) для комбинирования модельных преобразований.
 \end{itemize}
-Общая временная сложность: $O((N+M) \log N)$.
-Пространственная сложность: $O(N \log N)$ для хранения узлов персистентного дерева.
 
-\pagebreak
+Инициализация и работа с Vulkan (файл \texttt{source/veekay.cpp} и \texttt{testbed/main.cpp}):
+\begin{itemize}
+    \item Создание \texttt{VkInstance}, \texttt{VkDevice}, \texttt{VkSwapchainKHR} для взаимодействия с оконной системой (GLFW).
+    \item Загрузка шейдеров (\texttt{VkShaderModule}) и создание графического конвейера (\texttt{VkPipeline}). Вершинный шейдер (\texttt{shader.vert}) принимает матрицы трансформации и проекции через Push Constants.
+    \item Управление памятью и буферами (\texttt{VkBuffer}, \texttt{VkDeviceMemory}) для хранения вершинных и индексных данных 3D-модели (куба).
+    \item Синхронизация кадров с использованием \texttt{VkSemaphore} и \texttt{VkFence}.
+\end{itemize}
 
-\section{Исходный код}
-
-\begin{lstlisting}[language=C++, basicstyle=\small\ttfamily]
-#include <algorithm>
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-const int MAX_NODES = 10000000;
-
-struct Node {
-    int l, r;
-    int sum;
-} tree[MAX_NODES];
-
-int node_cnt = 0;
-
-int build(int tl, int tr) {
-    int id = ++node_cnt;
-    tree[id].sum = 0;
-    if (tl == tr) {
-        tree[id].l = tree[id].r = 0;
-        return id;
-    }
-    int tm = (tl + tr) / 2;
-    tree[id].l = build(tl, tm);
-    tree[id].r = build(tm + 1, tr);
-    return id;
-}
-
-int update(int prev, int tl, int tr, int pos, int val) {
-    int id = ++node_cnt;
-    tree[id] = tree[prev];
-    if (tl == tr) {
-        tree[id].sum += val;
-        return id;
-    }
-    int tm = (tl + tr) / 2;
-    if (pos <= tm)
-        tree[id].l = update(tree[prev].l, tl, tm, pos, val);
-    else
-        tree[id].r = update(tree[prev].r, tm + 1, tr, pos, val);
-
-    tree[id].sum = tree[tree[id].l].sum + tree[tree[id].r].sum;
-    return id;
-}
-
-int query(int u, int tl, int tr, int q_idx) {
-    if (q_idx < tl) return 0;
-    if (tr <= q_idx) return tree[u].sum;
-
-    int tm = (tl + tr) / 2;
-    return query(tree[u].l, tl, tm, q_idx) +
-            query(tree[u].r, tm + 1, tr, q_idx);
-}
-
-struct Segment {
-    int l, r, h;
-};
-
-bool cmp(const Segment& a, const Segment& b) {
-    return a.h > b.h;
-}
-
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
-    int n, m;
-    if (!(cin >> n >> m)) return 0;
-
-    vector<Segment> segs(n);
-    vector<int> coords;
-    coords.reserve(2 * n);
-
-    for (int i = 0; i < n; ++i) {
-        cin >> segs[i].l >> segs[i].r >> segs[i].h;
-        coords.push_back(segs[i].l);
-        coords.push_back(segs[i].r + 1);
-    }
-
-    sort(coords.begin(), coords.end());
-    coords.erase(unique(coords.begin(), coords.end()), coords.end());
-
-    auto get_pos = [&](int val) {
-        return lower_bound(coords.begin(), coords.end(), val) - coords.begin();
-    };
-
-    int sz = coords.size();
-    sort(segs.begin(), segs.end(), cmp);
-
-    vector<pair<int, int>> history;
-
-    int current_root = build(0, sz - 1);
-
-    for (const auto& s : segs) {
-        int l_idx = get_pos(s.l);
-        int r_idx = get_pos(s.r + 1);
-
-        current_root = update(current_root, 0, sz - 1, l_idx, 1);
-        current_root = update(current_root, 0, sz - 1, r_idx, -1);
-
-        history.push_back({s.h, current_root});
-    }
-
-    for (int i = 0; i < m; ++i) {
-        int x, y;
-        cin >> x >> y;
-
-        auto it = lower_bound(history.begin(), history.end(), y, [](const pair<int, int>& p, int val) {
-            return p.first > val;
-        });
-
-        int ans = 0;
-        if (it != history.begin()) {
-            int virt_root = prev(it)->second;
-
-            auto x_it = upper_bound(coords.begin(), coords.end(), x);
-            if (x_it != coords.begin()) {
-                int x_pos = prev(x_it) - coords.begin();
-                ans = query(virt_root, 0, sz - 1, x_pos);
-            }
-        }
-
-        cout << ans << "\n";
-    }
-
-    return 0;
-}    
-\end{lstlisting}
-
-\pagebreak
-
-\section{Консоль}
-\begin{alltt}
-george@GEORGE-PC:~/MaiLabs/MAI_labs_Discran/src$ make main
-george@GEORGE-PC:~/MaiLabs/MAI_labs_Discran/src$ ./main
-5 3
-0 5 2
-1 3 1
-1 8 5
--2 0 3
--1 6 -1
-1 0
-3 -3
-3 5
-3
-4
-0
-\end{alltt}
-\pagebreak
+В качестве интерактивного интерфейса для изменения параметров трансформации в реальном времени была интегрирована библиотека ImGui.

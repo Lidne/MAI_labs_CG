@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.12.8)  8 DEC 2025 20:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.12.8)  17 DEC 2025 17:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -904,92 +904,77 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.1 \section
-            {РћРїРёСЃР°РЅРёРµ} [1]
+            {РњРµС‚РѕРґ СЂРµС€РµРЅРёСЏ} [1]
 LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 
-8.
+5.
 
 (/usr/share/texmf-dist/tex/latex/cyrillic/t2acmtt.fd
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-Overfull \hbox (19.9762pt too wide) in paragraph at lines 17--18
-[]\T2A/cmr/m/n/12 Обработка за-про-сов: Для каж-до-го за-про-са по-иск нуж-ной 
-вер-сии за-ни-ма-ет $\OML/cmm/m/it/12 O\OT1/cmr/m/n/12 ([] \OML/cmm/m/it/12 N\O
-T1/cmr/m/n/12 )$\T2A/cmr/m/n/12 ,
+Overfull \hbox (38.03973pt too wide) in paragraph at lines 5--6
+[]\T2A/cmr/m/n/12 Основные ма-те-ма-ти-че-ские опе-ра-ции бы-ли ре-а-ли-зо-ва-н
+ы вруч-ную в фай-ле \T2A/cmtt/m/n/12 testbed/main.cpp\T2A/cmr/m/n/12 : 
  []
 
 
-Overfull \hbox (23.60498pt too wide) in paragraph at lines 19--21
-\T2A/cmr/m/n/12 Общая вре-мен-ная слож-ность: $\OML/cmm/m/it/12 O\OT1/cmr/m/n/1
-2 ((\OML/cmm/m/it/12 N \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 M\OT1/cmr/m/n/12 ) []
- \OML/cmm/m/it/12 N\OT1/cmr/m/n/12 )$\T2A/cmr/m/n/12 . Про-стран-ствен-ная слож
--ность: $\OML/cmm/m/it/12 O\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 N [] N\OT1/cmr/m/n
-/12 )$
+Overfull \hbox (42.4038pt too wide) in paragraph at lines 15--16
+[]\T2A/cmr/m/n/12 Загрузка шей-де-ров (\T2A/cmtt/m/n/12 VkShaderModule\T2A/cmr/
+m/n/12 ) и со-зда-ние гра-фи-че-ско-го кон-вей-е-ра (\T2A/cmtt/m/n/12 VkPipelin
+e\T2A/cmr/m/n/12 ).
  []
 
-
+) (./src/thinks.tex)
 
 [2{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-(/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
-LaTeX Font Info:    Font shape `T2A/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T2A/cmtt/m/n' tried instead on input line 27.
 
-
-[3]
-
-[4]
-
-[5])
-
-[6] (./src/banchmark.tex
-Overfull \hbox (13.94135pt too wide) in paragraph at lines 23--23
-[]\T2A/cmtt/m/n/12 george@GEORGE-PC:~/MaiLabs/MAI_labs_Discran/src$ python3 ben
-chmark_script.py[] 
- []
-
-) (./src/thinks.tex
-
-[7{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2b.enc}])
-
-[8] (./src/literature.tex
-Overfull \hbox (44.06032pt too wide) in paragraph at lines 11--12
-\T2A/cmr/m/n/12 URL: \T2A/cmtt/m/n/12 http://neerc.ifmo.ru/wiki/index.php?title
-=Персистентные_структуры_данных
- []
-
-)
-
-[9] (./report.aux)
+[3] (./report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: E89EA4EE17649759C26AF1D41286544F;954.
+
+
+Package rerunfilecheck Warning: File `report.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `report.out':
+(rerunfilecheck)             Before: E89EA4EE17649759C26AF1D41286544F;954
+(rerunfilecheck)             After:  48F8A0C6B0B650672EA422A11AF9C007;270.
  ) 
 Here is how much of TeX's memory you used:
- 15396 strings out of 474645
- 230904 string characters out of 5759193
- 1071961 words of memory out of 5000000
- 38018 multiletter control sequences out of 15000+600000
- 573146 words of font info for 70 fonts, out of 8000000 for 9000
+ 14697 strings out of 474645
+ 223405 string characters out of 5759193
+ 813961 words of memory out of 5000000
+ 37474 multiletter control sequences out of 15000+600000
+ 569596 words of font info for 65 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 90i,10n,93p,721b,2155s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/font
-s/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx12
-00.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/sh
-are/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/share/texmf-dist/
-fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf-dist/fonts/type1/pub
-lic/cm-super/sfrm1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sf
-ti1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></us
-r/share/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on report.pdf (10 pages, 262481 bytes).
+ 90i,7n,93p,376b,520s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+pdfTeX warning (dest): name{section.6} has been referenced but does not exist, 
+replaced by a fixed one
+
+
+pdfTeX warning (dest): name{section.5} has been referenced but does not exist, 
+replaced by a fixed one
+
+
+pdfTeX warning (dest): name{section.4} has been referenced but does not exist, 
+replaced by a fixed one
+
+
+pdfTeX warning (dest): name{section.3} has been referenced but does not exist, 
+replaced by a fixed one
+
+</usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/tex
+mf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf-dist/fonts/t
+ype1/public/cm-super/sfbx1728.pfb></usr/share/texmf-dist/fonts/type1/public/cm-
+super/sfrm1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1200.
+pfb>
+Output written on report.pdf (4 pages, 116995 bytes).
 PDF statistics:
- 316 PDF objects out of 1000 (max. 8388607)
- 274 compressed objects within 3 object streams
- 152 named destinations out of 1000 (max. 500000)
+ 82 PDF objects out of 1000 (max. 8388607)
+ 64 compressed objects within 1 object stream
+ 11 named destinations out of 1000 (max. 500000)
  49 words of extra memory for PDF output out of 10000 (max. 10000000)
 
