@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.12.8)  17 DEC 2025 17:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.12.8)  17 DEC 2025 17:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -906,68 +906,58 @@ been already used, duplicate ignored
 l.1 \section
             {РњРµС‚РѕРґ СЂРµС€РµРЅРёСЏ} [1]
 LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 
-6.
+8.
 
 (/usr/share/texmf-dist/tex/latex/cyrillic/t2acmtt.fd
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-(/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2024/09/23 1.10c listings language file
-)
-LaTeX Font Info:    Font shape `T2A/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `T2A/cmtt/m/n' tried instead on input line 9.
+Overfull \hbox (108.02658pt too wide) in paragraph at lines 9--10
+[]\T2A/cmr/m/n/12 Использование: \T2A/cmtt/m/n/12 VK_IMAGE_USAGE_DEPTH_STENCIL_
+ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT\T2A/cmr/m/n/12 . 
+ []
 
-Overfull \hbox (143.03554pt too wide) in paragraph at lines 27--29
-\T2A/cmr/m/n/12 (\T2A/cmtt/m/n/12 VkDescriptorSetLayout\T2A/cmr/m/n/12 ). До-ба
-в-ле-на при-вяз-ка (binding 2) ти-па \T2A/cmtt/m/n/12 VK_DESCRIPTOR_TYPE_COMBIN
-ED_IMAGE_SAMPLER\T2A/cmr/m/n/12 .
+
+Overfull \hbox (17.03569pt too wide) in paragraph at lines 10--11
+[]\T2A/cmr/m/n/12 Создан сэм-плер с под-держ-кой срав-не-ния глу-би-ны (\T2A/cm
+tt/m/n/12 VK_COMPARE_OP_LESS_OR_EQUAL\T2A/cmr/m/n/12 )
+ []
+
+
+Overfull \hbox (81.09096pt too wide) in paragraph at lines 25--26
+[]\T2A/cmr/m/n/12 Вершинный шей-дер вы-чис-ля-ет по-зи-цию фраг-мен-та в про-ст
+ран-стве све-та (\T2A/cmtt/m/n/12 fragPosLightSpace\T2A/cmr/m/n/12 ). 
  []
 
 
 
-[2]) (./src/thinks.tex
-Overfull \hbox (44.91853pt too wide) in paragraph at lines 9--10
-\T2A/cmr/m/n/12 маль-ный для чте-ния шей-де-ром фор-мат (\T2A/cmtt/m/n/12 VK_IM
-AGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL\T2A/cmr/m/n/12 ). 
- []
+[2{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}])
+(./src/thinks.tex)
 
-)
-
-[3{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-(./report.aux)
+[3] (./report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-Package rerunfilecheck Warning: File `report.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `report.out':
-(rerunfilecheck)             Before: 8C8B007448F2BE9B9CED609B974E41BE;815
-(rerunfilecheck)             After:  F84682166360648B38DB5E7A9BDEDB3C;1051.
+Package rerunfilecheck Info: File `report.out' has not changed.
+(rerunfilecheck)             Checksum: 6F2E9CB2EE77CE7F8EF6276084374334;1204.
  ) 
 Here is how much of TeX's memory you used:
- 15122 strings out of 474645
- 227395 string characters out of 5759193
- 839961 words of memory out of 5000000
- 37880 multiletter control sequences out of 15000+600000
- 571819 words of font info for 69 fonts, out of 8000000 for 9000
+ 14702 strings out of 474645
+ 223537 string characters out of 5759193
+ 814961 words of memory out of 5000000
+ 37478 multiletter control sequences out of 15000+600000
+ 570402 words of font info for 66 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 90i,7n,93p,470b,1273s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,7n,93p,644b,637s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/t
 exmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf-dist/fonts
 /type1/public/cm-super/sfbx1728.pfb></usr/share/texmf-dist/fonts/type1/public/c
-m-super/sfit1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm100
-0.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/sha
-re/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/texmf-dist/f
-onts/type1/public/cm-super/sftt1200.pfb>
-Output written on report.pdf (4 pages, 170366 bytes).
+m-super/sfrm1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt120
+0.pfb>
+Output written on report.pdf (4 pages, 129465 bytes).
 PDF statistics:
- 109 PDF objects out of 1000 (max. 8388607)
- 85 compressed objects within 1 object stream
- 24 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 82 PDF objects out of 1000 (max. 8388607)
+ 64 compressed objects within 1 object stream
+ 11 named destinations out of 1000 (max. 500000)
+ 49 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -7,11 +7,6 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD_REQUIRED TRUE CXX_STANDARD 20)
 
-if(MSVC)
-	target_compile_options(${PROJECT_NAME} PRIVATE /wd4201)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE -D_USE_MATH_DEFINES)
-endif()
-
 find_package(Vulkan REQUIRED)
 
 FetchContent_Declare(
@@ -56,6 +51,8 @@ if(GLSLC_FOUND)
 
 	compile_shader(shader.vert)
 	compile_shader(shader.frag)
+	compile_shader(shadow.vert)
+	compile_shader(shadow.frag)
 
 	add_custom_target(shaders DEPENDS ${_SHADER_BINARIES})
 	add_dependencies(${PROJECT_NAME} shaders)

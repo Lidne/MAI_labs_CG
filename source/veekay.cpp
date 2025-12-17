@@ -22,8 +22,6 @@ constexpr char window_title[] = "Veekay";
 
 constexpr uint32_t max_frames_in_flight = 2;
 
-GLFWwindow* window;
-
 VkInstance vk_instance;
 VkDebugUtilsMessengerEXT vk_debug_messenger;
 VkPhysicalDevice vk_physical_device;
@@ -74,12 +72,6 @@ void cache();
 
 }  // namespace input
 
-namespace graphics {
-
-void init();
-
-}  // namespace graphics
-
 }  // namespace veekay
 
 int veekay::run(const veekay::ApplicationInfo& app_info) {
@@ -93,24 +85,22 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    window = glfwCreateWindow(window_default_width, window_default_height,
-                              window_title, nullptr, nullptr);
-    if (!window) {
+    app.window = glfwCreateWindow(window_default_width, window_default_height,
+                                  window_title, nullptr, nullptr);
+    if (!app.window) {
         std::cerr << "Failed to create GLFW window\n";
         return 1;
     }
 
-    glfwSetWindowSize(window, window_default_width, window_default_height);
-
-    glfwSetWindowSizeLimits(window, window_default_width, window_default_height,
+    glfwSetWindowSize(app.window, window_default_width, window_default_height);
+    glfwSetWindowSizeLimits(app.window, window_default_width, window_default_height,
                             window_default_width, window_default_height);
-
     glfwPollEvents();
 
-    veekay::input::setup(window);
+    veekay::input::setup(app.window);
 
     int framebuffer_width, framebuffer_height;
-    glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
+    glfwGetFramebufferSize(app.window, &framebuffer_width, &framebuffer_height);
 
     app.window_width = static_cast<uint32_t>(framebuffer_width);
     app.window_height = static_cast<uint32_t>(framebuffer_height);
@@ -132,7 +122,7 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
         vk_instance = instance.instance;
         vk_debug_messenger = instance.debug_messenger;
 
-        if (glfwCreateWindowSurface(vk_instance, window, nullptr, &vk_surface) != VK_SUCCESS) {
+        if (glfwCreateWindowSurface(vk_instance, app.window, nullptr, &vk_surface) != VK_SUCCESS) {
             const char* message;
             glfwGetError(&message);
             std::cerr << message << '\n';
@@ -141,24 +131,17 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
 
         vkb::PhysicalDeviceSelector physical_device_selector(instance);
 
-		VkPhysicalDeviceFeatures device_features{
-			.samplerAnisotropy = true,
-		};
+        VkPhysicalDeviceFeatures device_features{
+            .samplerAnisotropy = true,
+        };
 
-		VkPhysicalDeviceDynamicRenderingFeaturesKHR dyn_rendering{
-			.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR,
-			.dynamicRendering = true,
-		};
-
-		auto selector_result = physical_device_selector.set_surface(vk_surface)
-		                                               .set_required_features(device_features)
-		                                               .add_required_extension(VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME)
-		                                               .add_required_extension_features(dyn_rendering)
-		                                               .select();
-		if (!selector_result) {
-			std::cerr << selector_result.error().message() << '\n';
-			return 1;
-		}
+        auto selector_result = physical_device_selector.set_surface(vk_surface)
+                                   .set_required_features(device_features)
+                                   .select();
+        if (!selector_result) {
+            std::cerr << selector_result.error().message() << '\n';
+            return 1;
+        }
 
         auto physical_device = selector_result.value();
 
@@ -213,8 +196,6 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
         veekay::app.vk_physical_device = vk_physical_device;
     }
 
-    graphics::init();
-
     {  // NOTE: ImGui initialization
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -223,7 +204,7 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
 
         ImGui::StyleColorsDark();
 
-        ImGui_ImplGlfw_InitForVulkan(window, true);
+        ImGui_ImplGlfw_InitForVulkan(app.window, true);
 
         {
             VkDescriptorPoolSize size = {
@@ -666,7 +647,7 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
         vkFreeCommandBuffers(vk_device, vk_command_pool, 1, &onetime_command_buffer);
     }
 
-    while (veekay::app.running && !glfwWindowShouldClose(window)) {
+    while (veekay::app.running && !glfwWindowShouldClose(app.window)) {
         veekay::input::cache();
 
         glfwPollEvents();
@@ -803,7 +784,7 @@ int veekay::run(const veekay::ApplicationInfo& app_info) {
     vkb::destroy_debug_utils_messenger(vk_instance, vk_debug_messenger);
     vkDestroyInstance(vk_instance, nullptr);
 
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(app.window);
     glfwTerminate();
 
     return 0;

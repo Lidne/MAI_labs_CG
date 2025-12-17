@@ -1,39 +1,36 @@
 \section{Метод решения}
 
-Для реализации поставленной задачи была доработана программа на языке C++ с использованием графического API Vulkan.
+Для реализации техники наложения теней (Shadow Mapping) были выполнены следующие шаги:
 
-\subsection{Загрузка изображения}
-Для загрузки изображения из файла была использована библиотека \texttt{lodepng}. Изображение загружается в массив байтов, который затем передается в конструктор класса текстуры.
+\subsection{Создание карты теней}
+Была создана текстура глубины, в которую будет производиться рендеринг сцены с точки зрения источника света.
+\begin{itemize}
+    \item Формат изображения: \texttt{VK\_FORMAT\_D32\_SFLOAT}.
+    \item Использование: \texttt{VK\_IMAGE\_USAGE\_DEPTH\_STENCIL\_ATTACHMENT\_BIT | VK\_IMAGE\_USAGE\_SAMPLED\_BIT}.
+    \item Создан сэмплер с поддержкой сравнения глубины (\texttt{VK\_COMPARE\_OP\_LESS\_OR\_EQUAL}) для реализации PCF (Percentage Closer Filtering).
+\end{itemize}
 
-\begin{lstlisting}[language=C++]
-std::vector<unsigned char> image;
-unsigned width, height;
-unsigned error = lodepng::decode(image, width, height, "assets/lenna.png");
-\end{lstlisting}
+\subsection{Проход рендеринга теней (Shadow Pass)}
+Реализован отдельный проход рендеринга (\texttt{VkRenderPass}) для заполнения карты теней.
+\begin{itemize}
+    \item Используется только attachment глубины, запись цвета отключена.
+    \item Графический конвейер (\texttt{shadow\_pipeline}) настроен на использование только вершинного шейдера (\texttt{shadow.vert}) для трансформации вершин в пространство света.
+    \item Включен \texttt{depthTestEnable} и \texttt{depthWriteEnable}.
+    \item \texttt{cullMode} установлен в \texttt{VK\_CULL\_MODE\_FRONT\_BIT} (или настроен соответственно) для устранения артефактов "peter panning".
+\end{itemize}
 
-\subsection{Создание текстуры}
-Класс \texttt{veekay::graphics::Texture} (в файле \texttt{source/graphics.cpp}) инкапсулирует создание \texttt{VkImage}, выделение памяти и загрузку данных. Конструктор принимает указатель на пиксели и выполняет следующие действия:
-\begin{enumerate}
-    \item Создает \texttt{VkImage} с нужными параметрами (размер, формат).
-    \item Выделяет и привязывает память (\texttt{vkAllocateMemory}, \texttt{vkBindImageMemory}).
-    \item Копирует данные пикселей из временного (staging) буфера в изображение, выполняя необходимые переходы раскладки памяти (layout transitions) с помощью \texttt{vkCmdPipelineBarrier}.
-    \item Создает \texttt{VkImageView} для доступа к изображению из шейдеров.
-\end{enumerate}
+\subsection{Использование карты теней}
+В основном проходе рендеринга карта теней передается во фрагментный шейдер (\texttt{shader.frag}) через дескриптор.
+\begin{itemize}
+    \item Вершинный шейдер вычисляет позицию фрагмента в пространстве света (\texttt{fragPosLightSpace}).
+    \item Во фрагментном шейдере реализована функция \texttt{ShadowCalculation}:
+    \begin{itemize}
+        \item Выполняется перспективное деление.
+        \item Применяется смещение (bias) для устранения артефактов "теневой ряби" (Shadow Acne), зависящее от угла падения света.
+        \item Реализована фильтрация PCF: выборка производится из окрестности текущего фрагмента (ядро 3x3), результаты усредняются для получения мягких краев тени.
+    \end{itemize}
+    \item Итоговое значение освещенности (diffuse и specular) умножается на коэффициент \texttt{(1.0 - shadow)}.
+\end{itemize}
 
-\subsection{Сэмплер}
-Для выборки текселей из текстуры в шейдере был создан объект сэмплера \texttt{VkSampler}. Настроен линейный фильтр (\texttt{VK\_FILTER\_LINEAR}) для минификации и магнификации, а также режим повторения текстуры (\texttt{VK\_SAMPLER\_ADDRESS\_MODE\_REPEAT}).
-
-\subsection{Дескрипторы}
-Для передачи текстуры и сэмплера в шейдер был обновлен макет дескрипторов (\texttt{VkDescriptorSetLayout}). Добавлена привязка (binding 2) типа \texttt{VK\_DESCRIPTOR\_TYPE\_COMBINED\_IMAGE\_SAMPLER}.
-Обновление дескрипторного набора (\texttt{vkUpdateDescriptorSets}) связывает созданный \texttt{VkImageView} и \texttt{VkSampler} с соответствующей привязкой.
-
-\subsection{Шейдеры}
-\textbf{Вершинный шейдер} (\texttt{shader.vert}) принимает текстурные координаты в атрибуте вершины (location 2) и передает их во фрагментный шейдер.
-
-\textbf{Фрагментный шейдер} (\texttt{shader.frag}) принимает интерполированные текстурные координаты и использует сэмплер для получения цвета пикселя:
-\begin{lstlisting}[language=C]
-layout (binding = 2) uniform sampler2D texSampler;
-// ...
-vec3 base_color = texture(texSampler, f_uv).rgb * albedo_color;
-\end{lstlisting}
-Полученный цвет текстуры затем используется в расчетах освещения.
+\subsection{Интеграция}
+Код рендеринга карты теней (\texttt{renderShadowMap}) выполняется перед основным рендерингом сцены в каждом кадре. Реализована корректная синхронизация ресурсов (Subpass Dependencies) для обеспечения завершения записи в карту теней перед её чтением в основном проходе.
