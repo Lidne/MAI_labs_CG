@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.12.8)  17 DEC 2025 17:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.12.8)  24 DEC 2025 00:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -931,33 +931,66 @@ Overfull \hbox (81.09096pt too wide) in paragraph at lines 25--26
 
 
 [2{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}])
-(./src/thinks.tex)
+(./src/thinks.tex
+<images/image1.png, id=47, 1284.8pt x 722.7pt>
+File: images/image1.png Graphic file (type png)
+<use images/image1.png>
+Package pdftex.def Info: images/image1.png  used on input line 18.
+(pdftex.def)             Requested size: 364.19664pt x 204.85785pt.
 
-[3] (./report.aux)
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<images/image2.png, id=48, 1284.8pt x 722.7pt>
+File: images/image2.png Graphic file (type png)
+<use images/image2.png>
+Package pdftex.def Info: images/image2.png  used on input line 25.
+(pdftex.def)             Requested size: 364.19664pt x 204.85785pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[3])
+
+[4{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2b.enc} <./images/i
+mage1.png (PNG copy)>]
+
+[5 <./images/image2.png (PNG copy)>] (./report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 6F2E9CB2EE77CE7F8EF6276084374334;1204.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `report.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `report.out':
+(rerunfilecheck)             Before: 6F2E9CB2EE77CE7F8EF6276084374334;1204
+(rerunfilecheck)             After:  06F46A2A0F8EEEA8F26FF101262B1216;1309.
  ) 
 Here is how much of TeX's memory you used:
- 14702 strings out of 474645
- 223537 string characters out of 5759193
+ 14727 strings out of 474645
+ 224046 string characters out of 5759193
  814961 words of memory out of 5000000
- 37478 multiletter control sequences out of 15000+600000
+ 37497 multiletter control sequences out of 15000+600000
  570402 words of font info for 66 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 90i,7n,93p,644b,637s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,7n,93p,963b,637s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/t
 exmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf-dist/fonts
 /type1/public/cm-super/sfbx1728.pfb></usr/share/texmf-dist/fonts/type1/public/c
 m-super/sfrm1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt120
 0.pfb>
-Output written on report.pdf (4 pages, 129465 bytes).
+Output written on report.pdf (6 pages, 269161 bytes).
 PDF statistics:
- 82 PDF objects out of 1000 (max. 8388607)
- 64 compressed objects within 1 object stream
- 11 named destinations out of 1000 (max. 500000)
- 49 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 100 PDF objects out of 1000 (max. 8388607)
+ 77 compressed objects within 1 object stream
+ 16 named destinations out of 1000 (max. 500000)
+ 59 words of extra memory for PDF output out of 10000 (max. 10000000)
 

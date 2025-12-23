@@ -663,7 +663,7 @@ void initialize(VkCommandBuffer cmd) {
             vkCreateSampler(device, &info, nullptr, &sampler);
         };
 
-        albedo_texture = loadTexture("assets/lenna.png");
+        albedo_texture = loadTexture("assets/gorilla.png");
         specular_texture = loadTexture("assets/specular.png");
         emissive_texture = loadTexture("assets/cube.png");
 
